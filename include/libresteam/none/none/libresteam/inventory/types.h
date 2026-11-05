@@ -1,0 +1,23 @@
+#ifndef LIBRESTEAM_INVENTORY_TYPES_H
+#define LIBRESTEAM_INVENTORY_TYPES_H
+
+#include <stdint.h>
+
+#define LIBRESTEAM_INVENTORY_RES_INVALID UINT32_MAX
+#define LIBRESTEAM_INVENTORY_UPDATE_INVALID UINT64_MAX
+#define LIBRESTEAM_INVENTORY_ITEM_INVALID UINT64_MAX
+#define LIBRESTEAM_INVENTORY_ITEM_SIZE 16U
+
+#define LIBRESTEAM_INVENTORY_ITEM_FLAG_NO_TRADE 0x0001U
+#define LIBRESTEAM_INVENTORY_ITEM_FLAG_REMOVED 0x0100U
+#define LIBRESTEAM_INVENTORY_ITEM_FLAG_CONSUMED 0x0200U
+
+typedef struct libresteam_inventory_item
+{
+    uint64_t id;
+    uint32_t def;
+    uint16_t quantity;
+    uint16_t flags;
+} libresteam_inventory_item_t;
+
+#endif
