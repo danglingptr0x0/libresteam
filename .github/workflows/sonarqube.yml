@@ -1,0 +1,36 @@
+name: sonarqube
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+permissions: {}
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: ./.github/actions/deps
+      - shell: bash
+        run: pacman -S --noconfirm --needed unzip
+      - uses: ./.github/actions/build
+        with:
+          target: linux
+          prefix: /opt/ci/stage/linux
+      - name: sonarqube
+        if: github.event_name != 'pull_request'
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=danglingptr0x0 -Dsonar.projectKey=danglingptr0x0_libresteam -Dsonar.sources=src,include -Dsonar.cfamily.compile-commands=/opt/ci/build-linux/compile_commands.json
+

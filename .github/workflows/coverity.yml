@@ -1,0 +1,43 @@
+name: coverity
+on:
+  schedule:
+    - cron: '41 4 * * *'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      COVERITY_SCAN_TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+      COVERITY_SCAN_EMAIL: ${{ secrets.COVERITY_SCAN_EMAIL }}
+      COVERITY_PROJECT: danglingptr0x0/libresteam
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: env.COVERITY_SCAN_TOKEN != ''
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/deps
+        if: env.COVERITY_SCAN_TOKEN != ''
+      - if: env.COVERITY_SCAN_TOKEN != ''
+        shell: bash
+        run: |
+          curl -fsS --data-urlencode "token=$COVERITY_SCAN_TOKEN" --data-urlencode "project=$COVERITY_PROJECT" -o /opt/cov.tgz https://scan.coverity.com/download/linux64
+          mkdir -p /opt/cov
+          tar -C /opt/cov --strip-components=1 -xzf /opt/cov.tgz
+      - if: env.COVERITY_SCAN_TOKEN != ''
+        shell: bash
+        env:
+          PKG_CONFIG_PATH: /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+        run: |
+          export PATH="/opt/cov/bin:$PATH"
+          cov-configure --template --compiler clang --comptype clangcc
+          cmake -S "$GITHUB_WORKSPACE" -B /opt/ci/build-linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/opt/dangcsa/linux/bin/clang
+          cov-build --dir cov-int cmake --build /opt/ci/build-linux --parallel "$(nproc)"
+          tar -czf cov-int.tgz cov-int
+      - if: env.COVERITY_SCAN_TOKEN != ''
+        shell: bash
+        run: curl -fsS --form "token=$COVERITY_SCAN_TOKEN" --form "email=$COVERITY_SCAN_EMAIL" --form file=@cov-int.tgz --form "version=$GITHUB_SHA" --form "description=$GITHUB_REF_NAME" "https://scan.coverity.com/builds?project=danglingptr0x0%2Flibresteam"

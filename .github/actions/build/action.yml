@@ -1,0 +1,27 @@
+name: build
+description: Configure, build and install libresteam for one platform with the DANGCSA clang
+inputs:
+  target:
+    description: linux or windows
+    required: true
+  prefix:
+    description: install prefix
+    required: true
+runs:
+  using: composite
+  steps:
+    - if: inputs.target == 'linux'
+      shell: bash
+      env:
+        PKG_CONFIG_PATH: /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+      run: cmake -S "$GITHUB_WORKSPACE" -B /opt/ci/build-linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_COMPILER=/opt/dangcsa/linux/bin/clang
+    - if: inputs.target == 'windows'
+      shell: bash
+      run: cmake -S "$GITHUB_WORKSPACE" -B /opt/ci/build-windows -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_C_COMPILER=/opt/dangcsa/linux/bin/clang -DCMAKE_C_COMPILER_TARGET=x86_64-w64-mingw32 -DCMAKE_AR=/usr/bin/llvm-ar -DCMAKE_RANLIB=/usr/bin/llvm-ranlib -DLIBRESTEAM_DANGLING_PREFIX=/opt/ldg-windows
+    - shell: bash
+      env:
+        CI_TARGET: ${{ inputs.target }}
+        CI_PREFIX: ${{ inputs.prefix }}
+      run: |
+        cmake --build "/opt/ci/build-$CI_TARGET" --parallel "$(nproc)"
+        cmake --install "/opt/ci/build-$CI_TARGET" --prefix "$CI_PREFIX"

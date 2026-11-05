@@ -1,0 +1,23 @@
+name: deps
+description: Install build packages, then fetch, verify and unpack the DANGCSA toolchain and libdangling
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: pacman -Syu --noconfirm --needed cmake curl git github-cli lld llvm mingw-w64-gcc pipewire xz
+    - shell: bash
+      run: |
+        gh release download --repo danglingptr0x0/llvm-project-dangcsa_dangxa --pattern 'llvm-*-linux-amd64.tar.xz' --dir /opt/ci/dl/tc
+        gh release download --repo danglingptr0x0/libdangling --pattern '*-linux-amd64.tar.xz' --dir /opt/ci/dl/ldg-linux
+        gh release download --repo danglingptr0x0/libdangling --pattern '*-windows-amd64.tar.xz' --dir /opt/ci/dl/ldg-windows
+    - shell: bash
+      run: |
+        for f in /opt/ci/dl/tc/*.tar.xz; do gh attestation verify "$f" --repo danglingptr0x0/llvm-project-dangcsa_dangxa; done
+        for f in /opt/ci/dl/ldg-linux/*.tar.xz /opt/ci/dl/ldg-windows/*.tar.xz; do gh attestation verify "$f" --repo danglingptr0x0/libdangling; done
+    - shell: bash
+      run: |
+        mkdir -p /opt/dangcsa /usr/local /opt/ldg-windows
+        for f in /opt/ci/dl/tc/*.tar.xz; do tar -C /opt/dangcsa -xJf "$f"; done
+        for f in /opt/ci/dl/ldg-linux/*.tar.xz; do tar -C /usr/local -xJf "$f"; done
+        for f in /opt/ci/dl/ldg-windows/*.tar.xz; do tar -C /opt/ldg-windows -xJf "$f"; done
+        /opt/dangcsa/linux/bin/clang --version

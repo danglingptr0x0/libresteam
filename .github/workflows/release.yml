@@ -1,0 +1,44 @@
+name: release
+on:
+  push:
+    tags:
+      - 'libresteam-r*'
+permissions: {}
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/deps
+      - uses: ./.github/actions/build
+        with:
+          target: linux
+          prefix: /opt/ci/stage/linux
+      - uses: ./.github/actions/build
+        with:
+          target: windows
+          prefix: /opt/ci/stage/windows
+      - shell: bash
+        run: |
+          [[ "$GITHUB_REF_NAME" =~ ^libresteam-r[0-9]+$ ]]
+          test -e /opt/ci/stage/linux/lib/libresteam.so
+          test -e /opt/ci/stage/windows/bin/libresteam.dll
+          test -e /opt/ci/stage/windows/lib/libresteam.dll.a
+          release="${GITHUB_REF_NAME#libresteam-}"
+          mkdir -p dist
+          tar -C /opt/ci/stage/linux -cJf "dist/libresteam-$release-linux-amd64.tar.xz" .
+          tar -C /opt/ci/stage/windows -cJf "dist/libresteam-$release-windows-amd64.tar.xz" .
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: 'dist/*.tar.xz'
+      - shell: bash
+        run: gh release create "$GITHUB_REF_NAME" dist/*.tar.xz --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --verify-tag --latest --notes ""
