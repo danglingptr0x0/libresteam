@@ -125,8 +125,6 @@ endif()
 add_library(libresteam SHARED ${LIBRESTEAM_SOURCES})
 set_target_properties(libresteam PROPERTIES
     PREFIX ""
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
     C_VISIBILITY_PRESET hidden
     STD_YESREALLYDONOTSTRIPTHISWINDOWSBINARY ON
 )
@@ -143,11 +141,17 @@ endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/extras.cmake" OPTIONAL)
 
+if(TARGET libresteam-repl AND LIBRESTEAM_PLATFORM STREQUAL "windows")
+    target_link_libraries(libresteam-repl PRIVATE ws2_32)
+endif()
+
 install(TARGETS libresteam
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libresteam.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libresteam.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libresteam.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 foreach(libresteam_inc_dir ${LIBRESTEAM_INCLUDE_DIRS})
     install(DIRECTORY "${libresteam_inc_dir}/libresteam" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endforeach()
