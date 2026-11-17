@@ -1,0 +1,3 @@
+LIBRARY libresteam-runtime
+EXPORTS
+    libresteam_ext_runtime_init

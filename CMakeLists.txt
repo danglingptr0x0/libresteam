@@ -52,75 +52,61 @@ else()
     message(FATAL_ERROR "libresteam: unsupported system '${CMAKE_SYSTEM_NAME}'")
 endif()
 
-set(LIBRESTEAM_PLATFORM_DIR "src/${LIBRESTEAM_ARCH}/${LIBRESTEAM_PLATFORM}")
-
-set(LIBRESTEAM_INCLUDE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/include/libresteam")
-set(LIBRESTEAM_INCLUDE_DIRS
-    "${LIBRESTEAM_INCLUDE_ROOT}/none/none"
-)
-foreach(libresteam_inc_sub "${LIBRESTEAM_ARCH}/none" "none/${LIBRESTEAM_PLATFORM}" "${LIBRESTEAM_ARCH}/${LIBRESTEAM_PLATFORM}")
-    if(EXISTS "${LIBRESTEAM_INCLUDE_ROOT}/${libresteam_inc_sub}")
-        list(APPEND LIBRESTEAM_INCLUDE_DIRS "${LIBRESTEAM_INCLUDE_ROOT}/${libresteam_inc_sub}")
-    endif()
-endforeach()
+set(LIBRESTEAM_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(LIBRESTEAM_SOURCES
-    src/none/none/steam_id/steam_id.c
-    src/none/none/game_id/game_id.c
-    src/none/none/backend/backend.c
-    src/none/none/user_stats/user_stats.c
-    src/none/none/friends/friends.c
-    src/none/none/cloud/cloud.c
-    src/none/none/lobby/lobby.c
-    src/none/none/srv_browser/srv_browser.c
-    src/none/none/cb/cb.c
-    src/none/none/backend/steam/steam.c
-    src/none/none/backend/steam/user_stats.c
-    src/none/none/user_stats/ext.c
-    src/none/none/backend/steam/user_stats_ext.c
-    src/none/none/backend/steam/friends.c
-    src/none/none/backend/steam/cloud.c
-    src/none/none/backend/steam/user.c
-    src/none/none/user/user.c
-    src/none/none/apps/apps.c
-    src/none/none/backend/steam/apps.c
-    src/none/none/utils/utils.c
-    src/none/none/backend/steam/utils.c
-    src/none/none/music/music.c
-    src/none/none/backend/steam/music.c
-    src/none/none/timeline/timeline.c
-    src/none/none/backend/steam/timeline.c
-    src/none/none/friends/ext.c
-    src/none/none/backend/steam/friends_ext.c
-    src/none/none/backend/steam/lobby.c
-    src/none/none/backend/steam/srv_browser.c
-    src/none/none/net/net.c
-    src/none/none/net_utils/net_utils.c
-    src/none/none/backend/steam/net_utils.c
-    src/none/none/net_socks/net_socks.c
-    src/none/none/backend/steam/net_socks.c
-    src/none/none/net_msgs/net_msgs.c
-    src/none/none/backend/steam/net_msgs.c
-    src/none/none/wshop/wshop.c
-    src/none/none/backend/steam/wshop.c
-    src/none/none/inventory/inventory.c
-    src/none/none/backend/steam/inventory.c
-    src/none/none/remote_play/remote_play.c
-    src/none/none/backend/steam/remote_play.c
-    src/none/none/app_id/app_id.c
-    src/none/none/wire/wire.c
-    src/none/none/backend/srv/srv.c
-    src/none/none/backend/srv/user_stats.c
-    src/none/none/backend/srv/friends.c
-    src/none/none/backend/srv/cloud.c
-    src/none/none/backend/srv/user.c
+    src/steam_id/steam_id.c
+    src/game_id/game_id.c
+    src/backend/backend.c
+    src/user/stats/stats.c
+    src/friends/friends.c
+    src/cloud/cloud.c
+    src/lobby/lobby.c
+    src/srv_browser/srv_browser.c
+    src/cb/cb.c
+    src/steam/steam.c
+    src/steam/path.c
+    src/steam/user/stats/stats.c
+    src/user/stats/ext.c
+    src/steam/user/stats/ext.c
+    src/steam/friends/friends.c
+    src/steam/cloud.c
+    src/steam/user/user.c
+    src/user/user.c
+    src/apps/apps.c
+    src/steam/apps.c
+    src/utils/utils.c
+    src/steam/utils.c
+    src/music/music.c
+    src/steam/music.c
+    src/timeline/timeline.c
+    src/steam/timeline.c
+    src/friends/ext.c
+    src/steam/friends/ext.c
+    src/steam/lobby.c
+    src/steam/srv_browser.c
+    src/net/net.c
+    src/net/utils/utils.c
+    src/steam/net/utils.c
+    src/net/socks/socks.c
+    src/steam/net/socks.c
+    src/net/msgs/msgs.c
+    src/steam/net/msgs.c
+    src/wshop/wshop.c
+    src/steam/wshop.c
+    src/inventory/inventory.c
+    src/steam/inventory.c
+    src/remote_play/remote_play.c
+    src/steam/remote_play.c
+    src/app_id/app_id.c
+    src/wire/wire.c
+    src/backend/srv/srv.c
+    src/backend/srv/user/stats.c
+    src/backend/srv/friends.c
+    src/backend/srv/cloud.c
+    src/backend/srv/user/user.c
+    src/mod/mod.c
 )
-
-if(LIBRESTEAM_PLATFORM STREQUAL "linux" OR LIBRESTEAM_PLATFORM STREQUAL "windows")
-    list(APPEND LIBRESTEAM_SOURCES
-        ${LIBRESTEAM_PLATFORM_DIR}/backend/steam/path.c
-    )
-endif()
 
 add_library(libresteam SHARED ${LIBRESTEAM_SOURCES})
 set_target_properties(libresteam PROPERTIES
@@ -128,15 +114,15 @@ set_target_properties(libresteam PROPERTIES
     C_VISIBILITY_PRESET hidden
     STD_YESREALLYDONOTSTRIPTHISWINDOWSBINARY ON
 )
-foreach(libresteam_inc_dir ${LIBRESTEAM_INCLUDE_DIRS})
-    target_include_directories(libresteam PUBLIC $<BUILD_INTERFACE:${libresteam_inc_dir}>)
-endforeach()
-target_include_directories(libresteam PUBLIC $<INSTALL_INTERFACE:include>)
+target_include_directories(libresteam PUBLIC $<BUILD_INTERFACE:${LIBRESTEAM_INCLUDE_DIRS}> $<INSTALL_INTERFACE:include>)
 target_include_directories(libresteam SYSTEM PUBLIC ${DANGLING_INCLUDE_DIRS})
-target_link_libraries(libresteam PUBLIC ${LIBRESTEAM_DANGLING_SHARED_LIBRARIES})
+target_link_options(libresteam PRIVATE "LINKER:--as-needed")
+target_link_libraries(libresteam PRIVATE ${LIBRESTEAM_DANGLING_SHARED_LIBRARIES})
+set(LIBRESTEAM_PC_LINK_NAME "libresteam${CMAKE_SHARED_LIBRARY_SUFFIX}")
 if(LIBRESTEAM_PLATFORM STREQUAL "windows")
     set_target_properties(libresteam PROPERTIES IMPORT_PREFIX "" IMPORT_SUFFIX ".dll.a")
     target_link_options(libresteam PRIVATE "LINKER:--out-implib,${CMAKE_CURRENT_BINARY_DIR}/libresteam.dll.a")
+    set(LIBRESTEAM_PC_LINK_NAME "libresteam.dll.a")
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/extras.cmake" OPTIONAL)
@@ -152,6 +138,4 @@ install(TARGETS libresteam
 )
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libresteam.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libresteam.pc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libresteam.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-foreach(libresteam_inc_dir ${LIBRESTEAM_INCLUDE_DIRS})
-    install(DIRECTORY "${libresteam_inc_dir}/libresteam" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-endforeach()
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/libresteam" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h")

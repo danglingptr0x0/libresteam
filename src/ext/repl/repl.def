@@ -1,0 +1,3 @@
+LIBRARY repl
+EXPORTS
+    dangmod_init=libresteam_ext_repl_init
