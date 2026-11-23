@@ -46,7 +46,7 @@ static uint32_t libresteam_shim_hit_log(libresteam_shim_iface_t *iface, uint32_t
     res = ctx->def[iface->id].kind_get(idx, &kind);
     if (res != LDG_ERR_AOK) { kind = LIBRESTEAM_SHIM_RET_INT; }
 
-    return ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_LOG_LVL, "%s; iface: %s; idx: %u32; method: %s; kind: %u32", tag, ctx->def[iface->id].version, idx, name, kind);
+    return ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_LOG_LVL, "%s; iface: %s; idx: %u32; method: %s; kind: %u32", tag, ctx->def[iface->id].version, idx, name, kind);
 }
 
 uint32_t libresteam_shim_call_note(libresteam_shim_iface_t *iface, uint32_t idx)
@@ -90,7 +90,7 @@ uint32_t libresteam_shim_arg_log(void *self, uint32_t idx, uint32_t res, const c
 {
     libresteam_shim_iface_t *iface = (libresteam_shim_iface_t *)self;
     libresteam_shim_ctx_t *ctx = 0x0;
-    char body[LDG_LOGGING_LINE_CAP + LDG_STR_TERM_SIZE] = LDG_ARR_ZERO_INIT;
+    char body[LDG_LOGGING_LN_CAP + LDG_STR_TERM_SIZE] = LDG_ARR_ZERO_INIT;
     const char *name = LIBRESTEAM_SHIM_STR_EMPTY;
     va_list args = LDG_STRUCT_ZERO_INIT;
     uint64_t len = 0;
@@ -109,11 +109,11 @@ uint32_t libresteam_shim_arg_log(void *self, uint32_t idx, uint32_t res, const c
     if (ctx->def[iface->id].name_get(idx, &name) != LDG_ERR_AOK) { name = LIBRESTEAM_SHIM_STR_EMPTY; }
 
     va_start(args, fmt);
-    fmt_res = ldg_str_variable_fmt(body, (uint64_t)sizeof(body), &len, fmt, args);
+    fmt_res = ldg_str_var_fmt(body, (uint64_t)sizeof(body), &len, fmt, args);
     va_end(args);
     if (fmt_res != LDG_ERR_AOK && fmt_res != LDG_ERR_STR_TRUNC) { return res; }
 
-    log_res = ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_LOG_LVL, "arg; iface: %s; method: %s; %s; res: %u32", ctx->def[iface->id].version, name, body, res);
+    log_res = ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_LOG_LVL, "arg; iface: %s; method: %s; %s; res: %u32", ctx->def[iface->id].version, name, body, res);
     if (LDG_UNLIKELY(log_res != LDG_ERR_AOK)) { return res; }
 
     return res;

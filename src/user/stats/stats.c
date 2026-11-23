@@ -187,7 +187,7 @@ uint32_t libresteam_user_stats_stat_int_set(const libresteam_backend_set_t *set,
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stat_int_set failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stat_int_set failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -225,7 +225,7 @@ uint32_t libresteam_user_stats_stat_fp64_set(const libresteam_backend_set_t *set
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stat fp64 set failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stat fp64 set failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -263,7 +263,7 @@ uint32_t libresteam_user_stats_avg_rate_stat_update(const libresteam_backend_set
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend avg rate stat update failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend avg rate stat update failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -301,7 +301,7 @@ uint32_t libresteam_user_stats_achievement_set(const libresteam_backend_set_t *s
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend achievement set failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend achievement set failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -339,7 +339,7 @@ uint32_t libresteam_user_stats_achievement_clear(const libresteam_backend_set_t 
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend achievement clear failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend achievement clear failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -377,7 +377,7 @@ uint32_t libresteam_user_stats_achievement_progress_indicate(const libresteam_ba
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend achievement progress indicate failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend achievement progress indicate failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -415,7 +415,7 @@ uint32_t libresteam_user_stats_stats_st(const libresteam_backend_set_t *set)
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stats st failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stats st failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -453,7 +453,7 @@ uint32_t libresteam_user_stats_stats_rst(const libresteam_backend_set_t *set, ui
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stats rst failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "user_stats: tee backend stats rst failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }

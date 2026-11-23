@@ -255,7 +255,7 @@ static uint32_t steam_init_fail(libresteam_steam_t *steam, uint32_t err)
     uint32_t res = LDG_ERR_AOK;
 
     res = steam_teardown(steam);
-    if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_steam: teardown after init failure failed"); }
+    if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_steam: teardown after init failure failed"); }
 
     return err;
 }

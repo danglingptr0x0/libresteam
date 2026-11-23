@@ -283,7 +283,7 @@ uint32_t libresteam_friends_rich_presence_set(const libresteam_backend_set_t *se
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "friends: tee backend rich_presence_set failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "friends: tee backend rich_presence_set failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -321,7 +321,7 @@ uint32_t libresteam_friends_rich_presence_clear(const libresteam_backend_set_t *
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "friends: tee backend rich_presence_clear failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "friends: tee backend rich_presence_clear failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -359,7 +359,7 @@ uint32_t libresteam_friends_played_with_set(const libresteam_backend_set_t *set,
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "friends: tee backend played_with_set failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "friends: tee backend played_with_set failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }

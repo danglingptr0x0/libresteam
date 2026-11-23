@@ -74,7 +74,7 @@ typedef struct libresteam_shim_flat_ip
 
 static uint32_t libresteam_shim_flat_log(const char *what, const char *detail)
 {
-    return ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; %s; %s", what, LIBRESTEAM_SHIM_FLAT_STR(detail));
+    return ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; %s; %s", what, LIBRESTEAM_SHIM_FLAT_STR(detail));
 }
 
 static uint32_t libresteam_shim_flat_set_get(const libresteam_backend_set_t **out)
@@ -114,7 +114,7 @@ uint32_t libresteam_shim_flat_iface_get(uint32_t kind, const char *version, void
     if (kind == LIBRESTEAM_SHIM_FLAT_KIND_GAME_SRV) { res = LDG_ERR_UNSUPPORTED; }
     else { res = libresteam_shim_iface_find(ctx, version, out); }
 
-    log_res = ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat iface; kind: %u32; version: %s; res: %u32", kind, version, res);
+    log_res = ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat iface; kind: %u32; version: %s; res: %u32", kind, version, res);
     if (log_res != LDG_ERR_AOK) { return res; }
 
     return res;
@@ -142,7 +142,7 @@ uint32_t libresteam_shim_flat_ck(libresteam_shim_ctx_t *ctx)
         if (res != LDG_ERR_AOK)
         {
             bad++;
-            if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; version missing; version: %s; method: %s", entry.version, entry.method) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
+            if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; version missing; version: %s; method: %s", entry.version, entry.method) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
 
             continue;
         }
@@ -151,7 +151,7 @@ uint32_t libresteam_shim_flat_ck(libresteam_shim_ctx_t *ctx)
         if (entry.def_idx >= ctx->def[iface->id].method_cunt)
         {
             bad++;
-            if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; idx out of range; version: %s; method: %s; idx: %u32; cunt: %u32", entry.version, entry.method, entry.def_idx, ctx->def[iface->id].method_cunt) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
+            if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; idx out of range; version: %s; method: %s; idx: %u32; cunt: %u32", entry.version, entry.method, entry.def_idx, ctx->def[iface->id].method_cunt) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
 
             continue;
         }
@@ -165,10 +165,10 @@ uint32_t libresteam_shim_flat_ck(libresteam_shim_ctx_t *ctx)
         if (ldg_parse_streq_is(name, entry.method) == LDG_TRUTH_TRUE && slot == entry.slot) { continue; }
 
         bad++;
-        if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; mismatch; version: %s; method: %s; have: %s; slot: %u32; want slot: %u32", entry.version, entry.method, name, slot, entry.slot) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
+        if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; mismatch; version: %s; method: %s; have: %s; slot: %u32; want slot: %u32", entry.version, entry.method, name, slot, entry.slot) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
     }
 
-    res = ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; entries: %u32; bad: %u32", (uint32_t)LIBRESTEAM_SHIM_FLAT_ENTRY_CUNT, bad);
+    res = ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat ck; entries: %u32; bad: %u32", (uint32_t)LIBRESTEAM_SHIM_FLAT_ENTRY_CUNT, bad);
     if (LDG_UNLIKELY(bad != 0)) { return LDG_ERR_INVALID; }
 
     return res;
@@ -214,7 +214,7 @@ void libresteam_shim_flat_thread_mem_release(void)
 
 void libresteam_shim_flat_mini_dump_wr(uint32_t code, void *info, uint32_t build)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; mini dump; code: %x32; info: %p; build: %u32", code, info, build) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; mini dump; code: %x32; info: %p; build: %u32", code, info, build) != LDG_ERR_AOK) { return; }
 }
 
 void libresteam_shim_flat_mini_dump_comment_set(const char *msg)
@@ -224,17 +224,17 @@ void libresteam_shim_flat_mini_dump_comment_set(const char *msg)
 
 void libresteam_shim_flat_breakpad_app_id_set(uint32_t app_id)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; breakpad app id; app_id: %u32", app_id) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; breakpad app id; app_id: %u32", app_id) != LDG_ERR_AOK) { return; }
 }
 
 void libresteam_shim_flat_breakpad_use(uint8_t en)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; breakpad handler; en: %u32", (uint32_t)en) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; breakpad handler; en: %u32", (uint32_t)en) != LDG_ERR_AOK) { return; }
 }
 
 void libresteam_shim_flat_try_catch_set(uint8_t en)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; try catch cbs; en: %u32", (uint32_t)en) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; try catch cbs; en: %u32", (uint32_t)en) != LDG_ERR_AOK) { return; }
 }
 
 void libresteam_shim_flat_call_res_reg(void *obj, uint64_t call)
@@ -991,7 +991,7 @@ static uint8_t libresteam_shim_flat_net_utils_conf_put(void *self, uint32_t val,
     if (libresteam_shim_flat_set_get(&set) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
     res = libresteam_net_utils_conf_val_set(set, val, scope, scope_obj, data_type, arg);
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; net conf set; val: %u32; scope: %u32; obj: %u64; type: %u32; res: %u32", val, scope, scope_obj, data_type, res) != LDG_ERR_AOK) { return res == LDG_ERR_AOK ? LDG_TRUTH_TRUE : LDG_TRUTH_FALSE; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; net conf set; val: %u32; scope: %u32; obj: %u64; type: %u32; res: %u32", val, scope, scope_obj, data_type, res) != LDG_ERR_AOK) { return res == LDG_ERR_AOK ? LDG_TRUTH_TRUE : LDG_TRUTH_FALSE; }
 
     if (res != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
@@ -1145,12 +1145,12 @@ void libresteam_shim_flat_hosted_addr_clear(void *self)
 
 uint32_t libresteam_shim_flat_hosted_addr_pop_get(const void *self)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; hosted addr pop get unsupported; addr: %p", self) != LDG_ERR_AOK) { return LIBRESTEAM_SHIM_FLAT_POP_NONE; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; hosted addr pop get unsupported; addr: %p", self) != LDG_ERR_AOK) { return LIBRESTEAM_SHIM_FLAT_POP_NONE; }
 
     return LIBRESTEAM_SHIM_FLAT_POP_NONE;
 }
 
 void libresteam_shim_flat_hosted_addr_dev_set(void *self, uint32_t ip, uint16_t port, uint32_t pop)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; hosted addr dev set unsupported; addr: %p; ip: %x32; port: %u32; pop: %x32", self, ip, (uint32_t)port, pop) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_FLAT_LOG_LVL, "flat; hosted addr dev set unsupported; addr: %p; ip: %x32; port: %u32; pop: %x32", self, ip, (uint32_t)port, pop) != LDG_ERR_AOK) { return; }
 }

@@ -67,7 +67,7 @@ static uint32_t srv_rd_byte_cb(void *ctx, uint8_t *out)
 
 static uint32_t srv_fail_close(libresteam_backend_srv_t *srv, uint32_t err)
 {
-    if (ldg_net_sock_live_is(&srv->sock) == LDG_TRUTH_TRUE && ldg_net_sock_close(&srv->sock, srv->timeout) != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: close after stream failure failed"); }
+    if (ldg_net_sock_live_is(&srv->sock) == LDG_TRUTH_TRUE && ldg_net_sock_close(&srv->sock, srv->timeout) != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: close after stream failure failed"); }
 
     return err;
 }
@@ -188,7 +188,7 @@ uint32_t libresteam_backend_srv_call(libresteam_backend_srv_t *srv, uint8_t serv
             if (LDG_UNLIKELY(pushes > srv->push_slot_cunt)) { return srv_fail_close(srv, LDG_ERR_NET_PROTOCOL); }
 
             res = srv_push_enqueue(srv, reply.cb_id, &srv->frame[LIBRESTEAM_WIRE_HDR_SIZE], reply.body_len);
-            if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: push dropped while waiting for reply"); }
+            if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: push dropped while waiting for reply"); }
 
             res = LDG_ERR_AOK;
             continue;
@@ -237,7 +237,7 @@ static uint32_t srv_pump(void *ctx, const libresteam_cb_sink_t *sink)
 
         if ((hdr.flags & LIBRESTEAM_WIRE_FLAG_PUSH) == 0) { res = srv_fail_close(srv, LDG_ERR_NET_PROTOCOL); break; }
 
-        if (srv_push_enqueue(srv, hdr.cb_id, &srv->frame[LIBRESTEAM_WIRE_HDR_SIZE], hdr.body_len) != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: push dropped while pumping"); }
+        if (srv_push_enqueue(srv, hdr.cb_id, &srv->frame[LIBRESTEAM_WIRE_HDR_SIZE], hdr.body_len) != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: push dropped while pumping"); }
     }
 
     while (srv->push_cunt > 0)
@@ -302,7 +302,7 @@ static uint32_t srv_init_fail(libresteam_backend_srv_t *srv, uint32_t err)
     uint32_t res = LDG_ERR_AOK;
 
     res = srv_teardown(srv);
-    if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: teardown after init failure failed"); }
+    if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "backend_srv: teardown after init failure failed"); }
 
     return err;
 }

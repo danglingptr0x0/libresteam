@@ -141,7 +141,7 @@ static uint32_t runtime_dispatch(runtime_ctx_t *ctx)
         res = runtime_backends_init(ctx);
         if (res == LDG_ERR_AOK) { res = libresteam_mod_dir_ld(&ctx->mods, &ctx->seed, ctx->root); }
 
-        if (res == LDG_ERR_AOK) { res = ldg_logging_line_wr(ctx->mods.log_path, LDG_LOGGING_LVL_INFO, "runtime ready; dispatch: window message; thread: %u32; window: 0x%x64; root: %s", ctx->thread_id, (uint64_t)(uintptr_t)ctx->window, ctx->root); }
+        if (res == LDG_ERR_AOK) { res = ldg_logging_ln_wr(ctx->mods.log_path, LDG_LOGGING_LVL_INFO, "runtime ready; dispatch: window message; thread: %u32; window: 0x%x64; root: %s", ctx->thread_id, (uint64_t)(uintptr_t)ctx->window, ctx->root); }
 
         if (res == LDG_ERR_AOK) { res = ldg_mem_lock(); }
 
@@ -157,7 +157,7 @@ static uint32_t runtime_dispatch(runtime_ctx_t *ctx)
     if (res != ctx->last_res)
     {
         ctx->last_res = res;
-        if (ldg_logging_line_wr(ctx->mods.log_path, LDG_LOGGING_LVL_INFO, "runtime tick; res: %u32", res) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
+        if (ldg_logging_ln_wr(ctx->mods.log_path, LDG_LOGGING_LVL_INFO, "runtime tick; res: %u32", res) != LDG_ERR_AOK) { return LDG_ERR_IO_WR; }
     }
 
     return res;
@@ -369,7 +369,7 @@ uint32_t libresteam_ext_runtime_init(void *arg)
 
         if (ctx->mods.log_path[0])
         {
-            res = ldg_logging_line_wr(ctx->mods.log_path, LDG_LOGGING_LVL_INFO, RUNTIME_STOP_LOG_FMT, ctx->res);
+            res = ldg_logging_ln_wr(ctx->mods.log_path, LDG_LOGGING_LVL_INFO, RUNTIME_STOP_LOG_FMT, ctx->res);
             if (res != LDG_ERR_AOK) { return res; }
         }
 

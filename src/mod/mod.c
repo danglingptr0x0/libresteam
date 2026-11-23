@@ -22,7 +22,7 @@ static uint32_t mod_log_cb(void *handle, const char *fmt, ...)
 {
     libresteam_mod_t *mod = (libresteam_mod_t *)handle;
     libresteam_mod_host_t *mods = 0x0;
-    char text[LDG_LOGGING_LINE_CAP] = LDG_ARR_ZERO_INIT;
+    char text[LDG_LOGGING_LN_CAP] = LDG_ARR_ZERO_INIT;
     va_list args;
     uint64_t len = 0x0;
     uint32_t res = LDG_ERR_AOK;
@@ -32,13 +32,13 @@ static uint32_t mod_log_cb(void *handle, const char *fmt, ...)
 
     mods = (libresteam_mod_host_t *)mod->owner;
     va_start(args, fmt);
-    res = ldg_str_variable_fmt(text, sizeof(text), &len, fmt, args);
+    res = ldg_str_var_fmt(text, sizeof(text), &len, fmt, args);
     va_end(args);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_STR_TRUNC)) { return res; }
 
     if (res == LDG_ERR_STR_TRUNC) { trunc = LDG_TRUTH_TRUE; }
 
-    res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod; %s; %s", mod->name, text);
+    res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod; %s; %s", mod->name, text);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
     if (trunc) { return LDG_ERR_STR_TRUNC; }
@@ -71,7 +71,7 @@ static uint32_t mod_tick_reg_cb(void *handle, libresteam_mod_tick_cb_t cb, void 
         res = ldg_mut_unlock(&mods->mut);
         if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
-        res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod; %s; tick registration failed; limit: %u32; res: %u32", mod->name, (uint32_t)LIBRESTEAM_MOD_TICK_MAX, (uint32_t)LDG_ERR_FULL);
+        res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod; %s; tick registration failed; limit: %u32; res: %u32", mod->name, (uint32_t)LIBRESTEAM_MOD_TICK_MAX, (uint32_t)LDG_ERR_FULL);
         if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
         return LDG_ERR_FULL;
@@ -243,7 +243,7 @@ static uint32_t mod_file_ld(libresteam_mod_host_t *mods)
     ldg_sys_lib_func_t sym = 0x0;
     uint32_t res = LDG_ERR_AOK;
 
-    if (mods->mod_cunt == LIBRESTEAM_MOD_MAX) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: mod limit; res: %u32", mods->mod_name, (uint32_t)LDG_ERR_FULL); }
+    if (mods->mod_cunt == LIBRESTEAM_MOD_MAX) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: mod limit; res: %u32", mods->mod_name, (uint32_t)LDG_ERR_FULL); }
 
     mod = &mods->mod[mods->mod_cunt];
     res = ldg_str_rbrcpy(mod->name, mods->mod_name, sizeof(mod->name));
@@ -251,11 +251,11 @@ static uint32_t mod_file_ld(libresteam_mod_host_t *mods)
 
     mod->owner = mods;
     res = ldg_sys_lib_open(mods->file_path, &mod->lib);
-    if (res != LDG_ERR_AOK) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: load failed; res: %u32", mod->name, res); }
+    if (res != LDG_ERR_AOK) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: load failed; res: %u32", mod->name, res); }
 
     mods->mod_cunt++;
     mod->accepting = LDG_TRUTH_TRUE;
-    res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod load; file: %s; res: %u32", mod->name, res);
+    res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod load; file: %s; res: %u32", mod->name, res);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
     res = ldg_sys_lib_sym_get(mod->lib, LIBRESTEAM_MOD_SHUTDOWN_SYM, &sym);
@@ -264,15 +264,15 @@ static uint32_t mod_file_ld(libresteam_mod_host_t *mods)
     if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_NOT_FOUND)) { return res; }
 
     res = ldg_sys_lib_sym_get(mod->lib, LIBRESTEAM_MOD_INIT_SYM, &sym);
-    if (res == LDG_ERR_NOT_FOUND) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod init; file: %s; entry: absent; loaded: 1", mod->name); }
+    if (res == LDG_ERR_NOT_FOUND) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod init; file: %s; entry: absent; loaded: 1", mod->name); }
 
     if (res == LDG_ERR_AOK) { res = ldg_mem_secure_cpy(&init, &sym, sizeof(init)); }
 
     if (res == LDG_ERR_AOK) { res = init(&mods->api, mod); }
 
-    if (res == LDG_ERR_AOK) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod init; file: %s; res: %u32", mod->name, res); }
+    if (res == LDG_ERR_AOK) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod init; file: %s; res: %u32", mod->name, res); }
 
-    res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod init; file: %s; res: %u32", mod->name, res);
+    res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod init; file: %s; res: %u32", mod->name, res);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
     res = mod_ticks_remove(mods, mod);
@@ -300,7 +300,7 @@ static uint32_t mod_next_get(const libresteam_mod_host_t *mods, const char *path
         {
             if (*after == LDG_STR_TERM)
             {
-                res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod entry skipped; dir: %s; reason: unsupported filename; res: %u32", path, res);
+                res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod entry skipped; dir: %s; reason: unsupported filename; res: %u32", path, res);
                 if (LDG_UNLIKELY(res != LDG_ERR_AOK))
                 {
                     res = ldg_io_dir_close(dir);
@@ -359,13 +359,13 @@ static uint32_t mod_candidate_ld(libresteam_mod_host_t *mods)
     res = ldg_io_path_ext_get(mods->file_name, ext, sizeof(ext));
     if (res == LDG_ERR_AOK) { res = ldg_str_cmp(ext, LIBRESTEAM_MOD_EXT, sizeof(ext), &cmp); }
 
-    if (res != LDG_ERR_AOK || cmp != LDG_ARITH_ORD_EQ) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod skipped; file: %s; reason: extension", mods->mod_name); }
+    if (res != LDG_ERR_AOK || cmp != LDG_ARITH_ORD_EQ) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod skipped; file: %s; reason: extension", mods->mod_name); }
 
     res = ldg_io_path_join(mods->dir_path, mods->file_name, mods->file_path, sizeof(mods->file_path));
-    if (res != LDG_ERR_AOK) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: path; res: %u32", mods->mod_name, res); }
+    if (res != LDG_ERR_AOK) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: path; res: %u32", mods->mod_name, res); }
 
     res = ldg_io_path_info_get(mods->file_path, &info);
-    if (res != LDG_ERR_AOK || !info.is_file) { return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: not a regular file; res: %u32", mods->mod_name, res); }
+    if (res != LDG_ERR_AOK || !info.is_file) { return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod skipped; file: %s; reason: not a regular file; res: %u32", mods->mod_name, res); }
 
     return mod_file_ld(mods);
 }
@@ -389,7 +389,7 @@ static uint32_t mod_dir_ld(libresteam_mod_host_t *mods)
     }
     if (res == LDG_ERR_EOF) { return LDG_ERR_AOK; }
 
-    return ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod directory skipped; dir: %s; res: %u32", mods->dir_path, res);
+    return ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod directory skipped; dir: %s; res: %u32", mods->dir_path, res);
 }
 
 static uint32_t mod_scan_init(libresteam_mod_host_t *mods)
@@ -417,7 +417,7 @@ static uint32_t mod_scan_init(libresteam_mod_host_t *mods)
     res = ldg_io_path_join(mods->root_path, mods->dir_name, mods->dir_path, sizeof(mods->dir_path));
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
-    res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod scan root; dir: %s", mods->dir_path);
+    res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod scan root; dir: %s", mods->dir_path);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
     return mod_dir_ld(mods);
@@ -463,7 +463,7 @@ uint32_t libresteam_mod_ld(libresteam_mod_host_t *mods, const libresteam_mod_api
     res = mod_scan_init(mods);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK))
     {
-        res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod scan failed; res: %u32", res);
+        res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_WARN, "mod scan failed; res: %u32", res);
         if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
         scan_failed = LDG_TRUTH_TRUE;
@@ -480,7 +480,7 @@ uint32_t libresteam_mod_ld(libresteam_mod_host_t *mods, const libresteam_mod_api
     res = ldg_mut_unlock(&mods->mut);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
-    res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod scan; loaded: %u32; ticks: %u32", mod_cunt, tick_cunt);
+    res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, "mod scan; loaded: %u32; ticks: %u32", mod_cunt, tick_cunt);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 
     if (stopping) { return libresteam_mod_unld(mods); }
@@ -552,7 +552,7 @@ uint32_t libresteam_mod_unld(libresteam_mod_host_t *mods)
 
         if (mod->shutdown) { mod->shutdown(); }
 
-        res = ldg_logging_line_wr(mods->log_path, LDG_LOGGING_LVL_INFO, MOD_SHUTDOWN_LOG_FMT, mod->name);
+        res = ldg_logging_ln_wr(mods->log_path, LDG_LOGGING_LVL_INFO, MOD_SHUTDOWN_LOG_FMT, mod->name);
         if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
     }
     return LDG_ERR_AOK;

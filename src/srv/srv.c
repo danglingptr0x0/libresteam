@@ -166,11 +166,11 @@ static uint32_t srv_listen(libresteam_srv_t *srv)
 
     res = ldg_net_sock_listen(SRV_HOST_V4, srv->port, &srv->listener[srv->listener_cunt]);
     if (res == LDG_ERR_AOK) { srv->listener_cunt++; }
-    else { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: listen on loopback v4 failed"); }
+    else { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: listen on loopback v4 failed"); }
 
     res = ldg_net_sock_listen(SRV_HOST_V6, srv->port, &srv->listener[srv->listener_cunt]);
     if (res == LDG_ERR_AOK) { srv->listener_cunt++; }
-    else { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: listen on loopback v6 failed"); }
+    else { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: listen on loopback v6 failed"); }
 
     if (srv->listener_cunt == 0) { return LDG_ERR_NET_CONN; }
 
@@ -312,7 +312,7 @@ static uint32_t srv_accept(libresteam_srv_t *srv, uint32_t listener_idx)
         if (srv->client[idx].live == LDG_TRUTH_TRUE) { continue; }
 
         res = srv_client_drop(&srv->client[idx]);
-        if (res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: stale client slot close failed"); }
+        if (res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: stale client slot close failed"); }
 
         srv->client[idx].sock = sock;
         srv->client[idx].live = LDG_TRUTH_TRUE;
@@ -320,7 +320,7 @@ static uint32_t srv_accept(libresteam_srv_t *srv, uint32_t listener_idx)
         return LDG_ERR_AOK;
     }
 
-    ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: client limit reached; connection refused");
+    ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: client limit reached; connection refused");
 
     return ldg_net_sock_close(&sock, LIBRESTEAM_SRV_TIMEOUT);
 }
@@ -369,7 +369,7 @@ uint32_t libresteam_srv_run(libresteam_srv_t *srv)
             if (slot == SRV_SLOT_LISTENER)
             {
                 res = srv_accept(srv, idx);
-                if (res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: accept failed"); }
+                if (res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: accept failed"); }
 
                 continue;
             }
@@ -378,7 +378,7 @@ uint32_t libresteam_srv_run(libresteam_srv_t *srv)
             if (res == LDG_ERR_AOK) { continue; }
 
             res = srv_client_drop(&srv->client[slot]);
-            if (res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: client close failed"); }
+            if (res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: client close failed"); }
         }
     }
 

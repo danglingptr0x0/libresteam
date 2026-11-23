@@ -64,39 +64,39 @@ uint8_t libresteam_shim_api_init(void)
     uint32_t res = LDG_ERR_AOK;
     uint32_t log_res = LDG_ERR_AOK;
 
-    log_res = ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init enter");
+    log_res = ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init enter");
     res = libresteam_shim_ctx_ensure_get(&ctx);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK))
     {
-        if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: context; ready: 0; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
+        if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: context; ready: 0; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
         return LDG_TRUTH_FALSE;
     }
 
     if (ctx->steam_up == LDG_TRUTH_TRUE)
     {
-        if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: already initialized; ready: 1; prior log res: %u32", log_res) != LDG_ERR_AOK) { return LDG_TRUTH_TRUE; }
+        if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: already initialized; ready: 1; prior log res: %u32", log_res) != LDG_ERR_AOK) { return LDG_TRUTH_TRUE; }
 
         return LDG_TRUTH_TRUE;
     }
 
-    log_res |= ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init backend begin");
+    log_res |= ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init backend begin");
     res = libresteam_steam_init(&ctx->steam, &ctx->steam_conf, &ctx->backend);
-    log_res |= ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init backend returned; res: %u32", res);
-    log_res |= ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init; steamclient: %s; pipe: %u32; user: %u32; res: %u32", ctx->steam.client_path, ctx->steam.pipe, ctx->steam.user, res);
+    log_res |= ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init backend returned; res: %u32", res);
+    log_res |= ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init; steamclient: %s; pipe: %u32; user: %u32; res: %u32", ctx->steam.client_path, ctx->steam.pipe, ctx->steam.user, res);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK))
     {
-        if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: backend; ready: 0; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
+        if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: backend; ready: 0; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
         return LDG_TRUTH_FALSE;
     }
 
-    log_res |= ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init set begin");
+    log_res |= ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init set begin");
     res = libresteam_backend_set_init(&ctx->set, &ctx->backend, LIBRESTEAM_SHIM_BACKEND_CUNT, LIBRESTEAM_SHIM_PRIMARY_IDX);
-    log_res |= ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "set init; res: %u32", res);
+    log_res |= ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "set init; res: %u32", res);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK))
     {
-        if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: set; ready: 0; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
+        if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: set; ready: 0; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
         return LDG_TRUTH_FALSE;
     }
@@ -105,7 +105,7 @@ uint8_t libresteam_shim_api_init(void)
     if (LDG_UNLIKELY(res != LDG_ERR_AOK))
     {
         log_res |= libresteam_steam_shutdown(&ctx->steam);
-        if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: flat ck; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
+        if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: flat ck; res: %u32; prior log res: %u32", res, log_res) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
         return LDG_TRUTH_FALSE;
     }
@@ -113,8 +113,8 @@ uint8_t libresteam_shim_api_init(void)
     ctx->steam_up = LDG_TRUTH_TRUE;
     ctx->instance += LIBRESTEAM_SHIM_INSTANCE_STEP;
 
-    log_res |= ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init done; instance: %u64", ctx->instance);
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: complete; ready: 1; prior log res: %u32", log_res) != LDG_ERR_AOK) { return LDG_TRUTH_TRUE; }
+    log_res |= ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init done; instance: %u64", ctx->instance);
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "init exit; stage: complete; ready: 1; prior log res: %u32", log_res) != LDG_ERR_AOK) { return LDG_TRUTH_TRUE; }
 
     return LDG_TRUTH_TRUE;
 }
@@ -132,12 +132,12 @@ void libresteam_shim_api_shutdown(void)
     ctx->steam_up = LDG_TRUTH_FALSE;
     ctx->instance += LIBRESTEAM_SHIM_INSTANCE_STEP;
 
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "shutdown; res: %u32", res) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "shutdown; res: %u32", res) != LDG_ERR_AOK) { return; }
 }
 
 uint8_t libresteam_shim_api_app_restart_is(uint32_t app_id)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "restart app if necessary; app_id: %u32", app_id) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "restart app if necessary; app_id: %u32", app_id) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
     return LDG_TRUTH_FALSE;
 }
@@ -192,7 +192,7 @@ void* libresteam_shim_api_user_iface_get(uint32_t user, const char *version)
     if (libresteam_shim_ctx->steam_up != LDG_TRUTH_TRUE) { return 0x0; }
 
     res = libresteam_shim_iface_find(libresteam_shim_ctx, version, &iface);
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "iface; user: %u32; version: %s; res: %u32", user, version, res) != LDG_ERR_AOK) { return iface; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "iface; user: %u32; version: %s; res: %u32", user, version, res) != LDG_ERR_AOK) { return iface; }
 
     return iface;
 }
@@ -208,7 +208,7 @@ void* libresteam_shim_api_game_srv_iface_get(uint32_t user, const char *version)
 {
     if (!version) { return 0x0; }
 
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "game srv iface unsupported; user: %u32; version: %s", user, version) != LDG_ERR_AOK) { return 0x0; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "game srv iface unsupported; user: %u32; version: %s", user, version) != LDG_ERR_AOK) { return 0x0; }
 
     return 0x0;
 }
@@ -245,19 +245,19 @@ void libresteam_shim_api_cb_run(void)
     libresteam_shim_ctx->cb_run_seen = LDG_TRUTH_TRUE;
     libresteam_shim_ctx->cb_run_res = res;
 
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "cb run; res: %u32", res) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "cb run; res: %u32", res) != LDG_ERR_AOK) { return; }
 }
 
 uint8_t libresteam_shim_game_srv_init(uint32_t ip, uint16_t steam_port, uint16_t game_port, uint16_t query_port, uint32_t mode, const char *version)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "game srv init unsupported; ip: %u32; steam port: %u32; game port: %u32; query port: %u32; mode: %u32; version: %s", ip, (uint32_t)steam_port, (uint32_t)game_port, (uint32_t)query_port, mode, version) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "game srv init unsupported; ip: %u32; steam port: %u32; game port: %u32; query port: %u32; mode: %u32; version: %s", ip, (uint32_t)steam_port, (uint32_t)game_port, (uint32_t)query_port, mode, version) != LDG_ERR_AOK) { return LDG_TRUTH_FALSE; }
 
     return LDG_TRUTH_FALSE;
 }
 
 void libresteam_shim_game_srv_shutdown(void)
 {
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "game srv shutdown") != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_API_LOG_LVL, "game srv shutdown") != LDG_ERR_AOK) { return; }
 }
 
 void libresteam_shim_game_srv_cb_run(void)

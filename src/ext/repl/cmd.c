@@ -59,7 +59,7 @@ uint32_t libresteam_ext_repl_emit(libresteam_ext_repl_ctx_t *ctx, const char *fm
     if (LDG_UNLIKELY(!ctx || !fmt)) { return LDG_ERR_FUNC_ARG_NULL; }
 
     va_start(args, fmt);
-    res = ldg_str_variable_fmt(ctx->line, sizeof(ctx->line), &len, fmt, args);
+    res = ldg_str_var_fmt(ctx->line, sizeof(ctx->line), &len, fmt, args);
     va_end(args);
     if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
 

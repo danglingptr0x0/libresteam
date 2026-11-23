@@ -60,7 +60,7 @@ uint32_t libresteam_shim_cb_reg(libresteam_shim_ctx_t *ctx, void *obj, uint32_t 
     ctx->cb_obj[ctx->cb_cunt] = obj;
     ctx->cb_cunt++;
 
-    return ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "cb reg; cb_id: %u32; flags: %u32; cunt: %u32", cb_id, (uint32_t)flags, ctx->cb_cunt);
+    return ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "cb reg; cb_id: %u32; flags: %u32; cunt: %u32", cb_id, (uint32_t)flags, ctx->cb_cunt);
 }
 
 uint32_t libresteam_shim_cb_unreg(libresteam_shim_ctx_t *ctx, void *obj)
@@ -113,7 +113,7 @@ uint32_t libresteam_shim_call_res_reg(libresteam_shim_ctx_t *ctx, void *obj, uin
     ctx->call_handle[ctx->call_cunt] = call;
     ctx->call_cunt++;
 
-    return ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res reg; call: %u64; cunt: %u32", call, ctx->call_cunt);
+    return ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res reg; call: %u64; cunt: %u32", call, ctx->call_cunt);
 }
 
 uint32_t libresteam_shim_call_res_unreg(libresteam_shim_ctx_t *ctx, void *obj, uint64_t call)
@@ -174,7 +174,7 @@ static uint32_t libresteam_shim_call_res_dispatch(libresteam_shim_ctx_t *ctx, co
     res = ldg_cpp_slot_get(&ctx->cb_desc, LIBRESTEAM_SHIM_CB_RUN_CALL, &slot);
     if (res != LDG_ERR_AOK)
     {
-        log_res = ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res slot failed; res: %u32; call: %u64; cb_id: %u32", res, call, cb_id);
+        log_res = ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res slot failed; res: %u32; call: %u64; cb_id: %u32", res, call, cb_id);
         if (log_res != LDG_ERR_AOK) { return log_res; }
 
         return res;
@@ -183,13 +183,13 @@ static uint32_t libresteam_shim_call_res_dispatch(libresteam_shim_ctx_t *ctx, co
     res = ldg_cpp_void_call(obj, slot, (ldg_cpp_arg_t[]) { { .ptr = ctx->call_res_buff, .kind = LDG_CPP_ARG_KIND_PTR }, { .val = failed, .kind = LDG_CPP_ARG_KIND_INT }, { .val = call, .kind = LDG_CPP_ARG_KIND_INT } }, LIBRESTEAM_SHIM_CB_RUN_CALL_ARG_CUNT);
     if (res != LDG_ERR_AOK)
     {
-        log_res = ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res run failed; res: %u32; call: %u64; cb_id: %u32; slot: %u32; obj: %p", res, call, cb_id, slot, obj);
+        log_res = ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res run failed; res: %u32; call: %u64; cb_id: %u32; slot: %u32; obj: %p", res, call, cb_id, slot, obj);
         if (log_res != LDG_ERR_AOK) { return log_res; }
 
         return res;
     }
 
-    return ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res run; call: %u64; cb_id: %u32; size: %u32; failed: %u32", call, cb_id, size, (uint32_t)failed);
+    return ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call res run; call: %u64; cb_id: %u32; size: %u32; failed: %u32", call, cb_id, size, (uint32_t)failed);
 }
 
 static void libresteam_shim_cb_msg_cb(void *content, uint32_t user, uint32_t cb_id, const uint8_t *param, uint32_t param_size)
@@ -210,7 +210,7 @@ static void libresteam_shim_cb_msg_cb(void *content, uint32_t user, uint32_t cb_
         if (ctx->call_cunt != 0) { res = libresteam_shim_call_res_dispatch(ctx, param, param_size); }
 
         if (res == LDG_ERR_AOK) { delivered++; }
-        else if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call completed undelivered; res: %u32; size: %u32; pending: %u32", res, param_size, ctx->call_cunt) != LDG_ERR_AOK) { return; }
+        else if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LIBRESTEAM_SHIM_CB_LOG_LVL, "call completed undelivered; res: %u32; size: %u32; pending: %u32", res, param_size, ctx->call_cunt) != LDG_ERR_AOK) { return; }
     }
 
     res = ldg_cpp_slot_get(&ctx->cb_desc, LIBRESTEAM_SHIM_CB_RUN, &slot);
@@ -231,7 +231,7 @@ static void libresteam_shim_cb_msg_cb(void *content, uint32_t user, uint32_t cb_
         if (res == LDG_ERR_AOK) { delivered++; }
     }
 
-    if (ldg_logging_line_wr(LIBRESTEAM_SHIM_LOG_PATH, LDG_LOGGING_LVL_DEBUG, "cb; user: %u32; cb_id: %u32; size: %u32; delivered: %u32", user, cb_id, param_size, delivered) != LDG_ERR_AOK) { return; }
+    if (ldg_logging_ln_wr(LIBRESTEAM_SHIM_LOG_PATH, LDG_LOGGING_LVL_DEBUG, "cb; user: %u32; cb_id: %u32; size: %u32; delivered: %u32", user, cb_id, param_size, delivered) != LDG_ERR_AOK) { return; }
 }
 
 uint32_t libresteam_shim_cb_run(libresteam_shim_ctx_t *ctx)

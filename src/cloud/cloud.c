@@ -268,7 +268,7 @@ uint32_t libresteam_cloud_file_wr(const libresteam_backend_set_t *set, const cha
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend file_wr failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend file_wr failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -306,7 +306,7 @@ uint32_t libresteam_cloud_file_forget(const libresteam_backend_set_t *set, const
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend file_forget failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend file_forget failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -344,7 +344,7 @@ uint32_t libresteam_cloud_file_delete(const libresteam_backend_set_t *set, const
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend file_delete failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend file_delete failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }
@@ -382,7 +382,7 @@ uint32_t libresteam_cloud_app_en_set(const libresteam_backend_set_t *set, uint8_
 
         if (LDG_UNLIKELY(res != LDG_ERR_AOK && res != LDG_ERR_UNSUPPORTED))
         {
-            res = ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend app_en_set failed");
+            res = ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "cloud: tee backend app_en_set failed");
             if (LDG_UNLIKELY(res != LDG_ERR_AOK)) { return res; }
         }
     }

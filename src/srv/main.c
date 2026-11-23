@@ -24,7 +24,7 @@ int main(void)
     if (res != LDG_ERR_AOK)
     {
         end_res = ldg_mem_shutdown();
-        if (end_res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: mem shutdown failed"); }
+        if (end_res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: mem shutdown failed"); }
 
         return SRV_MAIN_EXIT_FAIL;
     }
@@ -34,16 +34,16 @@ int main(void)
     res = libresteam_srv_init(srv);
     if (res == LDG_ERR_AOK) { res = libresteam_srv_run(srv); }
 
-    if (res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_ERR, "srv: stopped with an error"); }
+    if (res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_ERR, "srv: stopped with an error"); }
 
     end_res = libresteam_srv_shutdown(srv);
-    if (end_res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: shutdown failed"); }
+    if (end_res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: shutdown failed"); }
 
     end_res = ldg_mem_dealloc(mem);
-    if (end_res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: dealloc failed"); }
+    if (end_res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: dealloc failed"); }
 
     end_res = ldg_mem_shutdown();
-    if (end_res != LDG_ERR_AOK) { ldg_logging_line_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: mem shutdown failed"); }
+    if (end_res != LDG_ERR_AOK) { ldg_logging_ln_wr(LDG_LOGGING_CON, LDG_LOGGING_LVL_WARN, "srv: mem shutdown failed"); }
 
     if (res != LDG_ERR_AOK) { return SRV_MAIN_EXIT_FAIL; }
 
